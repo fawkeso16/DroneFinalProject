@@ -1,4 +1,4 @@
-//PickUpStation Class - we use pickupstations to distribute items to drones, we have a semaphore to limit the number of drones that can pick up items at the same time.
+//PickUpStation Class - we use pickupstations to distribute items to drones, we have a semaphore to limit the number of drones that can pick up items at the same time (thread safety).
 
 
 
