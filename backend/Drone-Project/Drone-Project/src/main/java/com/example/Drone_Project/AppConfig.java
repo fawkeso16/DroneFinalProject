@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
     
     @Bean
-    public Grid map() {
-        return new  Grid(190); 
+    public Grid grid() {
+        return new Grid(190); 
     }
 
-    // @Bean
-    // public LogManager logManager() {
-    //     return new LogManager(100);
-    // }
+    @Bean
+    public LogManager logManager() {
+        return new LogManager(100);
+    }
 
     @Bean
     public ConcurrentHashMap<String, Drone> drones() {

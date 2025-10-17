@@ -1,7 +1,5 @@
 package com.example.Drone_Project;
 
-public package com;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,9 +11,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final DroneWebSocketHandler droneWebSocketHandler;
+    private final WebSocketHandler droneWebSocketHandler;
 
-    public WebSocketConfig(DroneWebSocketHandler handler) {
+    public WebSocketConfig(WebSocketHandler handler) {
         this.droneWebSocketHandler = handler;
     }
 
@@ -37,7 +35,4 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(droneWebSocketHandler, "/ws/drones")
                 .setAllowedOrigins("*");  
     }
-}
- {
-    
 }

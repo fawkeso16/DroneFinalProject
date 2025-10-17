@@ -14,16 +14,16 @@ public class Drone {
 
     public Drone(String droneid, int x, int y, double battery) {
         this.droneid = droneid;
-        this.position.x = x;
-        this.position.y = y;
+        // initialize position node to avoid null pointer when assigning coordinates
+        this.position = new Node(x, y);
         this.battery = battery;
         this.available = DroneStatus.AVAILABLE.getCode();
         this.destination = null; 
     }
 
     public void moveTo(int newX, int newY) {
-        this.position.x = newX;
-        this.position.y = newY;
+        this.position.setX(newX);
+        this.position.setY(newY);
     }
 
     public void setDestination(Location destination) {
@@ -46,16 +46,16 @@ public class Drone {
         this.droneid = droneid;
     }
     public int getX() {
-        return position.x;
+        return position.getX();
     }
     public void setX(int x) {
-        this.position.x = x;
+        this.position.setX(x);
     }
     public int getY() {
-        return position.y;
+        return position.getY();
     }
     public void setY(int y) {
-        this.position.y = y;
+        this.position.setY(y);
     }
     public double getBattery() {
         return battery;
@@ -74,8 +74,8 @@ public class Drone {
     public String toString() {
         return "Drone{" +
                 "droneid='" + droneid + '\'' +
-                ", x=" + position.x +
-                ", y=" + position.y +
+                ", x=" + position.getX() +
+                ", y=" + position.getY() +
                 ", battery=" + battery +
                 ", available=" + available +
                 '}';

@@ -40,7 +40,6 @@ public class HungarianAssignment {
 
         int[] assignment = hungarian(cost);
 
-        // Build result mapping
         java.util.Map<Integer, String> mapping = new java.util.HashMap<>();
         double totalScore = 0.0;
         for (int i = 0; i < items.size(); i++) {
@@ -55,7 +54,6 @@ public class HungarianAssignment {
         return new Result(mapping, totalScore);
     }
 
-    // Hungarian algorithm (O(n^3)) — works for rectangular matrices
     private static int[] hungarian(double[][] costMatrix) {
         int n = costMatrix.length;
         double[] u = new double[n + 1];

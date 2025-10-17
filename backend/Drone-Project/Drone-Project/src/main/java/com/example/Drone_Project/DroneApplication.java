@@ -1,11 +1,11 @@
 package com.example.Drone_Project;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class DroneApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(DroneApplication.class, args);
-    }
+/**
+ * This class previously contained a Spring Boot entry point.
+ * To avoid multiple @SpringBootApplication classes causing a 'no main class' or
+ * ambiguous entry point during packaging, the main method and annotation were removed.
+ * The canonical application entrypoint is `DroneProjectApplication`.
+ */
+public final class DroneApplication {
+    private DroneApplication() { /* utility class - do not instantiate */ }
 }

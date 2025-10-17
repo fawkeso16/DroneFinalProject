@@ -2,10 +2,6 @@ package com.example.Drone_Project;
 
 import java.util.Random;
 
-import org.springframework.stereotype.Component;
-
-
-@Component
 public class Grid {
     private final int size;
     private final Node[][] grid;
