@@ -32,14 +32,14 @@ public class DroneService {
     public final ReentrantLock lock = new ReentrantLock();
 
     private final ScheduledExecutorService scheduler =
-        Executors.newScheduledThreadPool(10); 
+        Executors.newScheduledThreadPool(30); 
     private final JobOverviewService jobs;
     private final Grid map;
     private final List<Location> targets;   
     private final List<BatteryStation> batteryStations;
     private final List<PickupStation> pickUpStations;
-    private final ExecutorService pathfindingExecutor = newFixedThreadPool(14);
-    private final ExecutorService moveExecutor = Executors.newFixedThreadPool(14);
+    private final ExecutorService pathfindingExecutor = newFixedThreadPool(30);
+    private final ExecutorService moveExecutor = Executors.newFixedThreadPool(30);
     private final Random random = new Random();
     private final LogManager logManager;
     private final Pathfinder pathfinder = new Pathfinder();
@@ -534,6 +534,8 @@ public class DroneService {
             }
     
             Node next = iterator.next();
+            // debug logging to trace movement and investigate teleportation
+            System.out.println("[MOVE-TO-PICKUP] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             drone.setBattery(drone.getBattery() - batteryPerNode);
     
@@ -570,6 +572,8 @@ public class DroneService {
             }
     
             Node next = iterator.next();
+            // debug logging to trace movement and investigate teleportation
+            System.out.println("[MOVE-TO-DEST] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             drone.setBattery(drone.getBattery() - batteryPerNode);
     
@@ -662,6 +666,7 @@ public class DroneService {
         List<Node> path = pathfinder.findPath(map, map.getNode((int) drone.getX(), (int) drone.getY()), map.getNode((int) x, (int) y));
 
         for (Node next : path) {
+            System.out.println("[MOVE-TO-BS] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             try {
                 Thread.sleep(50); 

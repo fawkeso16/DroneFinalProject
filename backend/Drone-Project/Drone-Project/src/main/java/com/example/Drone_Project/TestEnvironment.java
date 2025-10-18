@@ -430,11 +430,11 @@ private static class DeterministicItemScheduler {
     private final List<ScheduledItem> scheduledItems = new ArrayList<>();
     
     public void scheduleItems() {
-        scheduledItems.add(new ScheduledItem(0, 10, false));  
+        scheduledItems.add(new ScheduledItem(0, 30, false));  
         
-        scheduledItems.add(new ScheduledItem(4000, 8, false));    
+        scheduledItems.add(new ScheduledItem(4000, 38, false));    
         scheduledItems.add(new ScheduledItem(8000, 1, true));     
-        scheduledItems.add(new ScheduledItem(9000, 8, false));   
+        scheduledItems.add(new ScheduledItem(9000, 28, false));   
         scheduledItems.add(new ScheduledItem(12000, 1, true));   
         scheduledItems.add(new ScheduledItem(13000, 8, false)); 
         scheduledItems.add(new ScheduledItem(16000, 1, true));    

@@ -11,7 +11,7 @@ final class LogManager {
 
     private final List<String>  logs;
     private final int maxLogs;
-    private final String filePath = "";
+    private final String filePath = "src/main/resources/files/log.csv";
 
 
     public LogManager(int maxLogs){
@@ -41,14 +41,14 @@ final class LogManager {
     }
 
     public void addLog(String[] log) {
-    if (logs.size() >= maxLogs) {
-        logs.remove(0);
-    }
+        if (logs.size() >= maxLogs) {
+            logs.remove(0);
+        }
 
     String csvLog = String.join(",", log);
-    logs.add(csvLog);
-    saveLogs();
-}
+        logs.add(csvLog);
+        saveLogs();
+    }
 
 
     public List<String> getLogs() {

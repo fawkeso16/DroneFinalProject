@@ -54,6 +54,26 @@ public class AppConfig {
         testDrones.put("DRONE008", new Drone("DRONE008", 66, 32, 100));
         testDrones.put("DRONE009", new Drone("DRONE009", 99, 187, 100));
         testDrones.put("DRONE010", new Drone("DRONE010", 187, 99, 100));
+        testDrones.put("DRONE011", new Drone("DRONE011", 123, 100, 100));
+        testDrones.put("DRONE012", new Drone("DRONE012", 21, 52, 100));
+        testDrones.put("DRONE013", new Drone("DRONE013", 119, 47, 100));
+        testDrones.put("DRONE014", new Drone("DRONE014", 75, 07, 100));
+        testDrones.put("DRONE015", new Drone("DRONE015", 73, 59, 100));
+        testDrones.put("DRONE016", new Drone("DRONE016", 71, 52, 100));
+        testDrones.put("DRONE017", new Drone("DRONE017", 50, 70, 100));
+        testDrones.put("DRONE018", new Drone("DRONE018", 61, 72, 100));
+        testDrones.put("DRONE019", new Drone("DRONE019", 91, 157, 100));
+        testDrones.put("DRONE020", new Drone("DRONE020", 126, 90, 100));
+        testDrones.put("DRONE021", new Drone("DRONE021", 113, 104, 100));
+        testDrones.put("DRONE022", new Drone("DRONE022", 51, 52, 100));
+        testDrones.put("DRONE023", new Drone("DRONE023", 100, 67, 100));
+        testDrones.put("DRONE024", new Drone("DRONE024", 75, 07, 100));
+        testDrones.put("DRONE025", new Drone("DRONE025", 33, 89, 100));
+        testDrones.put("DRONE026", new Drone("DRONE026", 81, 52, 100));
+        testDrones.put("DRONE027", new Drone("DRONE027", 50, 90, 100));
+        testDrones.put("DRONE028", new Drone("DRONE028", 41, 72, 100));
+        testDrones.put("DRONE029", new Drone("DRONE029", 91, 127, 100));
+        testDrones.put("DRONE30", new Drone("DRONE030", 117, 91, 100));
         return testDrones;
     }
     
@@ -99,63 +119,63 @@ public class AppConfig {
         return targets;
     }
 
-    // @Bean
-    // public List<BatteryStation> batteryStations(Map map) {
-    //     List<BatteryStation> batteryStations = new ArrayList<>();
-    //     for (int i = 0; i < 14; i++) {
-    //         node m = map.getRandomNode();
-    //         node n = new node(m.x, m.y);
-    //         batteryStations.add(new BatteryStation("BatteryStation-" + i, n));
-    //         System.out.println("Created Battery Station: " + n);
-    //     }
-    //     return batteryStations;
-    // }
+    @Bean
+    public List<BatteryStation> batteryStations(Grid map) {
+        List<BatteryStation> batteryStations = new ArrayList<>();
+        for (int i = 0; i < 14; i++) {
+            Node m = map.getRandomNode();
+            Node n = new Node(m.x, m.y);
+            batteryStations.add(new BatteryStation("BatteryStation-" + i, n));
+            System.out.println("Created Battery Station: " + n);
+        }
+        return batteryStations;
+    }
 
-    // @Bean
-    // public List<BatteryStation> TestBatteryStations(Map map) {
-    //     List<BatteryStation> batteryStations = new ArrayList<>();
+    @Bean
+    public List<BatteryStation> TestBatteryStations(Grid map) {
+        List<BatteryStation> batteryStations = new ArrayList<>();
 
-    //     int[][] coords = {
-    //         {10, 10}, {30, 40}, {60, 90}, {90, 60},
-    //         {120, 130}, {160, 20}, {170, 175}
-    //     };
+        int[][] coords = {
+            {10, 10}, {30, 40}, {60, 90}, {90, 60},
+            {120, 130}, {160, 20}, {170, 175}
+        };
 
-    //     for (int i = 0; i < coords.length; i++) {
-    //         node n = new node(coords[i][0], coords[i][1]);
-    //         batteryStations.add(new BatteryStation("BatteryStation-" + i, n));
-    //         System.out.println("Created Battery Station: " + n);
-    //     }
+        for (int i = 0; i < coords.length; i++) {
+            Node n = new Node(coords[i][0], coords[i][1]);
+            batteryStations.add(new BatteryStation("BatteryStation-" + i, n));
+            System.out.println("Created Battery Station: " + n);
+        }
 
-    //     return batteryStations;
-    // }
+        return batteryStations;
+    }
 
-    // @Bean
-    // public List<PickUpStation> pickUpStations(Map map) {
-    //     List<PickUpStation> pickUpStations = new ArrayList<>();
-    //     for (int i = 0; i < 5; i++) {
-    //         node m = map.getRandomNode();
-    //         node n = new node(m.x, m.y);
-    //         pickUpStations.add(new PickUpStation("PickUpStation-" + i, n));
-    //         // System.out.println("Created Pick Up Station: " + n);
-    //     }
-    //     return pickUpStations;
-    // }
+    @Bean
+    public List<PickupStation> pickUpStations(Grid map) {
+        List<PickupStation> pickUpStations = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Node m = map.getRandomNode();
+            Node n = new Node(m.x, m.y);
+            pickUpStations.add(new PickupStation("PickUpStation-" + i, n));
+            // System.out.println("Created Pick Up Station: " + n);
+        }
+        return pickUpStations;
+    }
 
-    // @Bean
-    // public List<PickUpStation> TestPickUpStations(Map map) {
-    //     List<PickUpStation> pickUpStations = new ArrayList<>();
+    @Bean
+    public List<PickupStation> TestPickUpStations(Grid map) {
+        List<PickupStation> pickUpStations = new ArrayList<>();
 
-    //     int[][] coords = {
-    //         {25, 40}, {66, 130}, {145, 145}, {140, 60}
-    //     };
+        int[][] coords = {
+            {25, 40}, {66, 130}, {145, 145}, {140, 60}
+        };
 
-    //     for (int i = 0; i < coords.length; i++) {
-    //         node n = new node(coords[i][0], coords[i][1]);
-    //         pickUpStations.add(new PickUpStation("PickUpStation-" + i, n));
-    //         // System.out.println("Created Pick Up Station: " + n);
-    //     }
+        for (int i = 0; i < coords.length; i++) {
+            Node n = new Node(coords[i][0], coords[i][1]);
+            pickUpStations.add(new PickupStation("PickUpStation-" + i, n));
+            // System.out.println("Created Pick Up Station: " + n);
+        }
 
-    //     return pickUpStations;
-    // }
+        return pickUpStations;
+    }
 
 }
