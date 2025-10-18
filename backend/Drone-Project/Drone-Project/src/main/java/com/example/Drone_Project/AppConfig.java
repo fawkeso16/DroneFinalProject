@@ -73,7 +73,7 @@ public class AppConfig {
         testDrones.put("DRONE027", new Drone("DRONE027", 50, 90, 100));
         testDrones.put("DRONE028", new Drone("DRONE028", 41, 72, 100));
         testDrones.put("DRONE029", new Drone("DRONE029", 91, 127, 100));
-        testDrones.put("DRONE30", new Drone("DRONE030", 117, 91, 100));
+        testDrones.put("DRONE030", new Drone("DRONE030", 117, 91, 100));
         return testDrones;
     }
     

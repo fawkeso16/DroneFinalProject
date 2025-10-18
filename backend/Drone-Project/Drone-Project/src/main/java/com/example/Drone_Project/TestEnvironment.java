@@ -420,9 +420,7 @@ public class TestEnvironment {
         System.out.println("Total double jobs: " + dualJobCount.get());
         String[] mergeSummary = { ItemDistributorService.getHourWithAmPm(), "MERGE", "Total double jobs: " + dualJobCount.get() };
         logManager.addLog(mergeSummary);
-        // System.out.println("Average battery usage per job: " + (jobs.getTotalBatteryUsage() / (double) jobs.completedJobs().size()));
-
-
+        // System.out.println("Average battery usage per job: " + (jobs.getTotalBatteryUsage() / (double) jobs.completedJobs().size()))
     }
 
 
