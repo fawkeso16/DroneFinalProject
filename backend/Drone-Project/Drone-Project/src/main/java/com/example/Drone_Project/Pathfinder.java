@@ -15,11 +15,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 
 
 public class Pathfinder {
     public List<Node> findPath(Grid map, Node start, Node end) {
+    Set<Node> noFlyZone = map.getNoFlyZone();
+    
+    boolean isThereANoFlyZoneRightNow = noFlyZone.isEmpty();
+
+    
     java.util.Map<Node, Node> cameFrom = new HashMap<>();
     java.util.Map<Node, Double> startToHere = new HashMap<>();
     java.util.Map<Node, Double> heuristic = new HashMap<>();
@@ -33,10 +39,21 @@ public class Pathfinder {
     while (!openSet.isEmpty()) {
 
         Node current = openSet.poll();
+
+        if(isThereANoFlyZoneRightNow && noFlyZone.contains(current)){  
+            continue;  
+        }
+
+
+
         if (current.equals(end)) {
             return reconstructPath(cameFrom, current);
         }
+        
         for (Node neighbor : current.getNeighbors()) {
+            if (noFlyZone.contains(neighbor)) {
+                continue; 
+            }
            double startToNeighbour = startToHere.getOrDefault(current, Double.MAX_VALUE) + current.distanceTo(neighbor);
            if (startToNeighbour < startToHere.getOrDefault(neighbor, Double.MAX_VALUE)) {
                 cameFrom.put(neighbor, current); 

@@ -8,7 +8,7 @@ public class BatteryStation {
     public Node location;
     private Semaphore slots;
     private int totalSlots; 
-    private int CHARGE_TIME = 3000;
+    private final int CHARGE_TIME = 3000;
     
   
     public BatteryStation(String name, Node location) {

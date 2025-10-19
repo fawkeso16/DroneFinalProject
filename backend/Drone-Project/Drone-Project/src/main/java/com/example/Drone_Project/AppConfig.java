@@ -1,7 +1,9 @@
 package com.example.Drone_Project;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.context.annotation.Bean;
@@ -9,10 +11,26 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
+
     
     @Bean
     public Grid grid() {
         return new Grid(190); 
+    }
+
+
+     public Set<Node> createSquareZone(int startX, int startY, int size) {
+        Set<Node> zone = new HashSet<>();
+        for (int x = startX; x < startX + size; x++) {
+            for (int y = startY; y < startY + size; y++) {
+                zone.add(new Node(x, y));
+            }
+        }
+        return zone;
+    }
+
+    public Set<Node> testNoFlyZone() {
+        return createSquareZone(150, 150, 30);
     }
 
     @Bean
@@ -74,13 +92,33 @@ public class AppConfig {
         testDrones.put("DRONE028", new Drone("DRONE028", 41, 72, 100));
         testDrones.put("DRONE029", new Drone("DRONE029", 91, 127, 100));
         testDrones.put("DRONE030", new Drone("DRONE030", 117, 91, 100));
+        testDrones.put("DRONE031", new Drone("DRONE031", 183, 124, 100));
+        testDrones.put("DRONE032", new Drone("DRONE032", 111, 52, 100));
+        testDrones.put("DRONE033", new Drone("DRONE033", 10, 67, 100));
+        testDrones.put("DRONE034", new Drone("DRONE034", 35, 97, 100));
+        testDrones.put("DRONE035", new Drone("DRONE035", 31, 29, 100));
+        testDrones.put("DRONE036", new Drone("DRONE036", 181, 152, 100));
+        testDrones.put("DRONE037", new Drone("DRONE037", 150, 160, 100));
+        testDrones.put("DRONE038", new Drone("DRONE038", 21, 72, 100));
+        testDrones.put("DRONE039", new Drone("DRONE039", 61, 167, 100));
+        testDrones.put("DRONE040", new Drone("DRONE040", 107, 11, 100));
+        // testDrones.put("DRONE041", new Drone("DRONE041", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE042", new Drone("DRONE042", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE043", new Drone("DRONE043",randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE044", new Drone("DRONE044", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE045", new Drone("DRONE045", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE046", new Drone("DRONE046", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE047", new Drone("DRONE047", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE048", new Drone("DRONE048", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE049", new Drone("DRONE049", randomCoord(), randomCoord(), 100));
+        // testDrones.put("DRONE050", new Drone("DRONE050", randomCoord(), randomCoord(), 100));
         return testDrones;
     }
     
 
 
     private static int randomCoord() {
-        return (int) (Math.random() * 190);
+        return (int) (Math.random() * 188);
     }
 
     @Bean

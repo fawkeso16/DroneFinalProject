@@ -401,12 +401,10 @@ public class TestEnvironment {
     TestReport(duration);
 }
 
-    
 
-
-         public void TestReport(long duration) {
+    public void TestReport(long duration) {
         
-            String[] logMessage = {
+        String[] logMessage = {
             ItemDistributorService.getHourWithAmPm(),
             "Test Environment",
             "Test completed in " + duration + " ms"
@@ -430,9 +428,9 @@ private static class DeterministicItemScheduler {
     public void scheduleItems() {
         scheduledItems.add(new ScheduledItem(0, 30, false));  
         
-        scheduledItems.add(new ScheduledItem(4000, 38, false));    
+        scheduledItems.add(new ScheduledItem(4000, 118, false));    
         scheduledItems.add(new ScheduledItem(8000, 1, true));     
-        scheduledItems.add(new ScheduledItem(9000, 28, false));   
+        scheduledItems.add(new ScheduledItem(9000, 228, false));   
         scheduledItems.add(new ScheduledItem(12000, 1, true));   
         scheduledItems.add(new ScheduledItem(13000, 8, false)); 
         scheduledItems.add(new ScheduledItem(16000, 1, true));    

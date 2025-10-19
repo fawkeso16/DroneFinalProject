@@ -25,7 +25,7 @@ public final class DroneController {
     private final List<PickupStation> pickUpStations;
     private final ItemDistributorService itemDistributorService;
     private final TestEnvironment testEnvironment;
-
+    private final Grid map;
     private final ConcurrentHashMap<String, Drone> drones;
     private volatile boolean simulationRunning = false;
     private final LogManager logManager;
@@ -39,7 +39,8 @@ public final class DroneController {
         LogManager logManager,
         ConcurrentHashMap<String, Drone> TestDrones,
         ItemDistributorService itemDistributorService,
-        TestEnvironment testEnvironment
+        TestEnvironment testEnvironment,
+        Grid map
     ) {
         // this.droneService = droneService;
         this.logManager = logManager;
@@ -49,6 +50,7 @@ public final class DroneController {
         this.drones = TestDrones;
         this.itemDistributorService = itemDistributorService;
         this.testEnvironment = testEnvironment;
+        this.map = map;
     }
 
     public static String getHourWithAmPm() {
@@ -80,9 +82,15 @@ public final class DroneController {
     }
 
 
-     @GetMapping("/api/drones/allLogs")
+    @GetMapping("/api/drones/allLogs")
     public List<String> getLogs() {
         return logManager.getLogs();
+    }
+
+
+    @GetMapping("/api/map/noFlyZone")
+    public List<Node> getNoFlyZone() {
+        return new ArrayList<>(map.getNoFlyZone());
     }
 
 

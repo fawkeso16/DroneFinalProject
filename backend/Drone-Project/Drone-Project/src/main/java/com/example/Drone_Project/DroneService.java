@@ -534,8 +534,6 @@ public class DroneService {
             }
     
             Node next = iterator.next();
-            // debug logging to trace movement and investigate teleportation
-            System.out.println("[MOVE-TO-PICKUP] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             drone.setBattery(drone.getBattery() - batteryPerNode);
     
@@ -572,8 +570,6 @@ public class DroneService {
             }
     
             Node next = iterator.next();
-            // debug logging to trace movement and investigate teleportation
-            System.out.println("[MOVE-TO-DEST] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             drone.setBattery(drone.getBattery() - batteryPerNode);
     
@@ -666,7 +662,6 @@ public class DroneService {
         List<Node> path = pathfinder.findPath(map, map.getNode((int) drone.getX(), (int) drone.getY()), map.getNode((int) x, (int) y));
 
         for (Node next : path) {
-            System.out.println("[MOVE-TO-BS] Drone " + drone.getDroneid() + " moving from (" + drone.getX() + "," + drone.getY() + ") to (" + next.x + "," + next.y + ")");
             drone.moveTo(next.x, next.y);
             try {
                 Thread.sleep(50); 
