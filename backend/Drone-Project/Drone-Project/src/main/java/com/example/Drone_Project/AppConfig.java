@@ -61,57 +61,13 @@ public class AppConfig {
 
     @Bean
     public ConcurrentHashMap<String, Drone> TestDrones() {
+        int DRONE_COUNT = 50;
         ConcurrentHashMap<String, Drone> testDrones = new ConcurrentHashMap<>();
-        testDrones.put("DRONE001", new Drone("DRONE001", 123, 100, 100));
-        testDrones.put("DRONE002", new Drone("DRONE002", 25, 32, 100));
-        testDrones.put("DRONE003", new Drone("DRONE003", 111, 17, 100));
-        testDrones.put("DRONE004", new Drone("DRONE004", 45, 67, 100));
-        testDrones.put("DRONE005", new Drone("DRONE005", 23, 89, 100));
-        testDrones.put("DRONE006", new Drone("DRONE006", 78, 56, 100));
-        testDrones.put("DRONE007", new Drone("DRONE007", 90, 10, 100));
-        testDrones.put("DRONE008", new Drone("DRONE008", 66, 32, 100));
-        testDrones.put("DRONE009", new Drone("DRONE009", 99, 187, 100));
-        testDrones.put("DRONE010", new Drone("DRONE010", 187, 99, 100));
-        testDrones.put("DRONE011", new Drone("DRONE011", 123, 100, 100));
-        testDrones.put("DRONE012", new Drone("DRONE012", 21, 52, 100));
-        testDrones.put("DRONE013", new Drone("DRONE013", 119, 47, 100));
-        testDrones.put("DRONE014", new Drone("DRONE014", 75, 07, 100));
-        testDrones.put("DRONE015", new Drone("DRONE015", 73, 59, 100));
-        testDrones.put("DRONE016", new Drone("DRONE016", 71, 52, 100));
-        testDrones.put("DRONE017", new Drone("DRONE017", 50, 70, 100));
-        testDrones.put("DRONE018", new Drone("DRONE018", 61, 72, 100));
-        testDrones.put("DRONE019", new Drone("DRONE019", 91, 157, 100));
-        testDrones.put("DRONE020", new Drone("DRONE020", 126, 90, 100));
-        testDrones.put("DRONE021", new Drone("DRONE021", 113, 104, 100));
-        testDrones.put("DRONE022", new Drone("DRONE022", 51, 52, 100));
-        testDrones.put("DRONE023", new Drone("DRONE023", 100, 67, 100));
-        testDrones.put("DRONE024", new Drone("DRONE024", 75, 07, 100));
-        testDrones.put("DRONE025", new Drone("DRONE025", 33, 89, 100));
-        testDrones.put("DRONE026", new Drone("DRONE026", 81, 52, 100));
-        testDrones.put("DRONE027", new Drone("DRONE027", 50, 90, 100));
-        testDrones.put("DRONE028", new Drone("DRONE028", 41, 72, 100));
-        testDrones.put("DRONE029", new Drone("DRONE029", 91, 127, 100));
-        testDrones.put("DRONE030", new Drone("DRONE030", 117, 91, 100));
-        testDrones.put("DRONE031", new Drone("DRONE031", 183, 124, 100));
-        testDrones.put("DRONE032", new Drone("DRONE032", 111, 52, 100));
-        testDrones.put("DRONE033", new Drone("DRONE033", 10, 67, 100));
-        testDrones.put("DRONE034", new Drone("DRONE034", 35, 97, 100));
-        testDrones.put("DRONE035", new Drone("DRONE035", 31, 29, 100));
-        testDrones.put("DRONE036", new Drone("DRONE036", 181, 152, 100));
-        testDrones.put("DRONE037", new Drone("DRONE037", 150, 160, 100));
-        testDrones.put("DRONE038", new Drone("DRONE038", 21, 72, 100));
-        testDrones.put("DRONE039", new Drone("DRONE039", 61, 167, 100));
-        testDrones.put("DRONE040", new Drone("DRONE040", 107, 11, 100));
-        // testDrones.put("DRONE041", new Drone("DRONE041", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE042", new Drone("DRONE042", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE043", new Drone("DRONE043",randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE044", new Drone("DRONE044", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE045", new Drone("DRONE045", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE046", new Drone("DRONE046", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE047", new Drone("DRONE047", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE048", new Drone("DRONE048", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE049", new Drone("DRONE049", randomCoord(), randomCoord(), 100));
-        // testDrones.put("DRONE050", new Drone("DRONE050", randomCoord(), randomCoord(), 100));
+        for (int i = 1; i <= DRONE_COUNT; i++) {
+            testDrones.put("DRONE" + String.format("%03d", i),
+                    new Drone("DRONE" + String.format("%03d", i),
+                            randomCoord(), randomCoord(), 100));
+        }
         return testDrones;
     }
     

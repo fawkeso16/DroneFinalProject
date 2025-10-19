@@ -32,14 +32,14 @@ public class DroneService {
     public final ReentrantLock lock = new ReentrantLock();
 
     private final ScheduledExecutorService scheduler =
-        Executors.newScheduledThreadPool(30); 
+        Executors.newScheduledThreadPool(40); 
     private final JobOverviewService jobs;
     private final Grid map;
     private final List<Location> targets;   
     private final List<BatteryStation> batteryStations;
     private final List<PickupStation> pickUpStations;
-    private final ExecutorService pathfindingExecutor = newFixedThreadPool(30);
-    private final ExecutorService moveExecutor = Executors.newFixedThreadPool(30);
+    private final ExecutorService pathfindingExecutor = newFixedThreadPool(40);
+    private final ExecutorService moveExecutor = Executors.newFixedThreadPool(40);
     private final Random random = new Random();
     private final LogManager logManager;
     private final Pathfinder pathfinder = new Pathfinder();
