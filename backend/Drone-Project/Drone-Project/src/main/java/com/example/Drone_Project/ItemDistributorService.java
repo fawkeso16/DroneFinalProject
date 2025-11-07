@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,6 @@ public class ItemDistributorService {
         return formatter.format(new Date(System.currentTimeMillis()));
     }
 
-    @Autowired
     public ItemDistributorService( List<PickupStation> TestPickUpStations, LogManager logManager
     , @Lazy DeliveryEstimationService deliveryEstimationService, ConcurrentHashMap<String, Drone> drones) {
 

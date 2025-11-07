@@ -15,11 +15,11 @@ public class AppConfig {
     
     @Bean
     public Grid grid() {
-        return new Grid(190); 
+        return new Grid(190, createSquareZone(80, 80, 30)); 
     }
 
 
-     public Set<Node> createSquareZone(int startX, int startY, int size) {
+    public Set<Node> createSquareZone(int startX, int startY, int size) {
         Set<Node> zone = new HashSet<>();
         for (int x = startX; x < startX + size; x++) {
             for (int y = startY; y < startY + size; y++) {
@@ -61,7 +61,7 @@ public class AppConfig {
 
     @Bean
     public ConcurrentHashMap<String, Drone> TestDrones() {
-        int DRONE_COUNT = 50;
+        int DRONE_COUNT = 30;
         ConcurrentHashMap<String, Drone> testDrones = new ConcurrentHashMap<>();
         for (int i = 1; i <= DRONE_COUNT; i++) {
             testDrones.put("DRONE" + String.format("%03d", i),

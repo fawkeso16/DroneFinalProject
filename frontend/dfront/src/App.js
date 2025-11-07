@@ -7,7 +7,7 @@ import DroneIcon from "./DroneIcon";
 import BatteryStation from "./BatteryStations";
 import PickUpStations from "./PickUpStations";
 import Drone3DMap from "./Drone3DMap"; 
-import NoFlyZone from "./NoFlyZone";
+// import NoFlyZone from "./NoFlyZone";
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
   const [isFollowMode, setIsFollowMode] = useState(false);
   const containerRef = useRef(null);
   const followTransition = useRef(null);
+  const noFlyZoneCanvasRef = useRef(null);
   
   const [followZoom, setFollowZoom] = useState(2);
   const [showInfoBoxes, setShowInfoBoxes] = useState(true);
@@ -190,6 +191,31 @@ function App() {
       return closestIndex;
     }
 
+    useEffect(() => {
+      if (!showNoFlyZone || !noFlyZoneCanvasRef.current || noFlyNodes.length === 0) return;
+
+      const canvas = noFlyZoneCanvasRef.current;;
+
+      const ctx = canvas.getContext('2d')
+
+      canvas.width = dimensions.width
+      canvas.height = dimensions.height
+
+      ctx.clearRect(0, 0, canvas.width ,canvas.height)
+
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+      ctx.strokeStyle = 'rgba(255, 0, 0, 0.2)';
+      ctx.lineWidth = 1;
+
+      noFlyNodes.forEach(node => {
+        const x = scaleX(node.x)
+        const y = scaleY(node.y)
+
+        ctx.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT)
+        ctx.strokeRect(x, y, CELL_WIDTH, CELL_HEIGHT);
+
+      })
+    }, [showNoFlyZone, noFlyNodes, dimensions.width, dimensions.height, CELL_WIDTH, CELL_HEIGHT]);
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -311,9 +337,10 @@ function App() {
 
 
 
-  // useEffect(() => {
-  //   getNoFlyZone();
-  // }, []);
+  useEffect(() => {
+    getNoFlyZone();
+    console.log("No-fly zone data fetched" );
+  }, []);
 
 
 
@@ -396,6 +423,8 @@ function App() {
     }, 15);
   };
 
+
+  
   
 
   //handles zooming, we pass in type (a small fix for allowing us to tap on a drone to zoom in, but upon second tap we dont zoom out - we leave zoom out to the exit button)
@@ -531,13 +560,19 @@ return (
               <PickUpStations />
             </div>
 
-            <NoFlyZone
-              display={showNoFlyZone}
-              nodes={noFlyNodes}
-              mapWidth={dimensions.width}
-              mapHeight={dimensions.height}
-              gridSize={190}
-            />
+            {/* No-Fly Zone - single canvas for performance */}
+            {showNoFlyZone && (
+              <canvas
+                ref={noFlyZoneCanvasRef}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  pointerEvents: 'none',
+                  zIndex: 400,
+                }}
+              />
+            )}
 
 
             {drones.map((drone) => (

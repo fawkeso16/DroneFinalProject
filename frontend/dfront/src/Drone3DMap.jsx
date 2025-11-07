@@ -5,7 +5,7 @@ import "./Drone3DMap.css";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-mapboxgl.accessToken = "";
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
 export default function Drone3DMap({ drones, showPaths, paths }) {
   const mapContainer = useRef(null);

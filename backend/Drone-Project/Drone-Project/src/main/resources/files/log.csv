@@ -1,114 +1,115 @@
-10:47 pm,MERGE,Double job: Item1256+Item1240
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE049 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,MERGE,Double job: Item1255+Item1243
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE032 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,MERGE,Double job: Item1250+Item1359
-10:47 pm,Dual Job Completed ,Items Delivered: Item1142, Item1302 by Drone: DRONE040
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE040 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Reacharging Drone,Drone DRONE033 moved to battery station at (10.0 - 10.0)
-10:47 pm,Reacharging Drone,Drone DRONE033 moved to battery station at (10.0 - 10.0)
-10:47 pm,Dual Job Completed ,Items Delivered: Item1191, Item1291 by Drone: DRONE036
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE036 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1170, Item1270 by Drone: DRONE039
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE039 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1164, Item1136 by Drone: DRONE031
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE031 to Item: unNamedItem
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE031 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1197, Item1297 by Drone: DRONE047
-10:47 pm,MERGE,Double job: Item1362+Item1397
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE047 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Reacharging Drone,Drone DRONE019 moved to battery station at (60.0 - 90.0)
-10:47 pm,Reacharging Drone,Drone DRONE019 moved to battery station at (60.0 - 90.0)
-10:47 pm,Dual Job Completed ,Items Delivered: Item1208, Item1308 by Drone: DRONE016
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE016 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1181, Item1281 by Drone: DRONE024
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE024 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1175, Item1179 by Drone: DRONE018
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE018 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1288, Item1148 by Drone: DRONE007
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE007 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1301, Item1309 by Drone: DRONE041
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE041 to Item: unNamedItem
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE033 to Item: unNamedItem
-10:47 pm,MERGE,Double job: Item1375+Item1393
-10:47 pm,Dual Job Completed ,Items Delivered: Item1165, Item1145 by Drone: DRONE044
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE044 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1144, Item1272 by Drone: DRONE023
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE023 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1196, Item1296 by Drone: DRONE035
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE035 to Item: unNamedItem
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE019 to Item: unNamedItem
-10:47 pm,MERGE,Double job: Item1368+Item1398
-10:47 pm,Dual Job Completed ,Items Delivered: Item1200, Item1400 by Drone: DRONE021
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE021 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1162, Item1262 by Drone: DRONE030
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE030 to Item: unNamedItem
-10:47 pm,MERGE,Double job: Item1383+Item1396
-10:47 pm,Dual Job Completed ,Items Delivered: Item1285, Item1249 by Drone: DRONE028
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE028 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1158, Item1258 by Drone: DRONE026
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE026 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Dual Job Completed ,Items Delivered: Item1160, Item1140 by Drone: DRONE008
-10:47 pm,Dual Job Completed ,Items Delivered: Item1167, Item1395 by Drone: DRONE034
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE034 to Item: unNamedItem
-10:47 pm,MERGE,Double job: Item1377+Item1390
-10:47 pm,Dual Job Completed ,Items Delivered: Item1278, Item1242 by Drone: DRONE048
-10:47 pm ,Dual Job Assigned,Assigned Drone: DRONE048 Items: [First: unNamedItem, Second: unNamedItem]
-10:47 pm,Job Completed ,Item Delivered: Item1284 by Drone: DRONE004
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE004 to Item: unNamedItem
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE004 to Item: unNamedItem
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE050 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1130, Item1150 by Drone: DRONE037
-10:47 pm ,Job Assigned,Created job - Assigned Drone: DRONE037 to Item: unNamedItem
-10:47 pm,Dual Job Completed ,Items Delivered: Item1163, Item1263 by Drone: DRONE027
-10:47 pm,Dual Job Completed ,Items Delivered: Item1250, Item1359 by Drone: DRONE040
-10:47 pm,Dual Job Completed ,Items Delivered: Item1176, Item1292 by Drone: DRONE025
-10:47 pm,Job Completed ,Item Delivered: Item1264 by Drone: DRONE029
-10:47 pm,Dual Job Completed ,Items Delivered: Item1277, Item1241 by Drone: DRONE043
-10:47 pm,Job Completed ,Item Delivered: Item1271 by Drone: DRONE012
-10:47 pm,Dual Job Completed ,Items Delivered: Item1294, Item1394 by Drone: DRONE009
-10:47 pm,Dual Job Completed ,Items Delivered: Item1387, Item1147 by Drone: DRONE045
-10:47 pm,Dual Job Completed ,Items Delivered: Item1186, Item1286 by Drone: DRONE015
-10:47 pm,Dual Job Completed ,Items Delivered: Item1161, Item1153 by Drone: DRONE002
-10:47 pm,Job Completed ,Item Delivered: Item1149 by Drone: DRONE038
-10:47 pm,Job Completed ,Item Delivered: Item1244 by Drone: DRONE039
-10:47 pm,Dual Job Completed ,Items Delivered: Item1133, Item1289 by Drone: DRONE011
-10:47 pm,Dual Job Completed ,Items Delivered: Item1143, Item1155 by Drone: DRONE010
-10:47 pm,Dual Job Completed ,Items Delivered: Item1131, Item1259 by Drone: DRONE020
-10:47 pm,Dual Job Completed ,Items Delivered: Item1399, Item1135 by Drone: DRONE014
-10:47 pm,Dual Job Completed ,Items Delivered: Item1253, Item1257 by Drone: DRONE022
-10:47 pm,Dual Job Completed ,Items Delivered: Item1390, Item1377 by Drone: DRONE048
-10:47 pm,Job Completed ,Item Delivered: Item1374 by Drone: DRONE023
-10:47 pm,Dual Job Completed ,Items Delivered: Item1378, Item1251 by Drone: DRONE006
-10:47 pm,Dual Job Completed ,Items Delivered: Item1279, Item1159 by Drone: DRONE001
-10:47 pm,Dual Job Completed ,Items Delivered: Item1166, Item1266 by Drone: DRONE042
-10:47 pm,Job Completed ,Item Delivered: Item1372 by Drone: DRONE033
-10:47 pm,Dual Job Completed ,Items Delivered: Item1375, Item1393 by Drone: DRONE044
-10:47 pm,Dual Job Completed ,Items Delivered: Item1243, Item1255 by Drone: DRONE032
-10:47 pm,Dual Job Completed ,Items Delivered: Item1261, Item1157 by Drone: DRONE003
-10:47 pm,Job Completed ,Item Delivered: Item1267 by Drone: DRONE013
-10:47 pm,Job Completed ,Item Delivered: Item1363 by Drone: DRONE024
-10:47 pm,Dual Job Completed ,Items Delivered: Item1280, Item1132 by Drone: DRONE046
-10:47 pm,Job Completed ,Item Delivered: Item1373 by Drone: DRONE041
-10:47 pm,Job Completed ,Item Delivered: Item1384 by Drone: DRONE030
-10:47 pm,Dual Job Completed ,Items Delivered: Item1252, Item1260 by Drone: DRONE005
-10:47 pm,Job Completed ,Item Delivered: Item1366 by Drone: DRONE018
-10:47 pm,Job Completed ,Item Delivered: Item1371 by Drone: DRONE035
-10:47 pm,Job Completed ,Item Delivered: Item1381 by Drone: DRONE034
-10:47 pm,Dual Job Completed ,Items Delivered: Item1368, Item1398 by Drone: DRONE021
-10:47 pm,Dual Job Completed ,Items Delivered: Item1360, Item1391 by Drone: DRONE007
-10:47 pm,Dual Job Completed ,Items Delivered: Item1388, Item1248 by Drone: DRONE036
-10:47 pm,Job Completed ,Item Delivered: Item1370 by Drone: DRONE019
-10:47 pm,Dual Job Completed ,Items Delivered: Item1383, Item1396 by Drone: DRONE028
-10:47 pm,Dual Job Completed ,Items Delivered: Item1268, Item1365 by Drone: DRONE017
-10:47 pm,Job Completed ,Item Delivered: Item1382 by Drone: DRONE008
-10:47 pm,Dual Job Completed ,Items Delivered: Item1401, Item1380 by Drone: DRONE026
-10:47 pm,Dual Job Completed ,Items Delivered: Item1362, Item1397 by Drone: DRONE047
-10:47 pm,Job Completed ,Item Delivered: Item1246 by Drone: DRONE031
-10:47 pm,Dual Job Completed ,Items Delivered: Item1256, Item1240 by Drone: DRONE049
-10:47 pm,Dual Job Completed ,Items Delivered: Item1361, Item1379 by Drone: DRONE016
-10:47 pm,Job Completed ,Item Delivered: Item1392 by Drone: DRONE004
-10:47 pm,Job Completed ,Item Delivered: Item1389 by Drone: DRONE037
-10:47 pm,Job Completed ,Item Delivered: Item1386 by Drone: DRONE050
-10:47 pm,Test Environment,Test completed in 157210 ms
-10:47 pm,MERGE,Total double jobs: 800
+11:32 am,Job Failed ,Failed job: DRONE001-JOB
+11:32 am,Job Completed ,Item Delivered: Item895 by Drone: DRONE016
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE018 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE012 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE014 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE001 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE023 to Item: PriorityHighPriorityItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE016 to Item: unNamedItem
+11:32 am,Item Distributor Service,Added priority item: PriorityHighPriorityItem at station: PickUpStation-0
+11:32 am,Job Completed ,Item Delivered: Item878 by Drone: DRONE004
+11:32 am,Job Completed ,Item Delivered: Item780 by Drone: DRONE005
+11:32 am,Job Completed ,Item Delivered: Item999 by Drone: DRONE002
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Job Completed ,Item Delivered: Item998 by Drone: DRONE007
+11:32 am,Job Completed ,Item Delivered: Item771 by Drone: DRONE025
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE017 to Item: PriorityHighPriorityItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE007 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE002 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE005 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE004 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE025 to Item: unNamedItem
+11:32 am,Job Completed ,Item Delivered: Item783 by Drone: DRONE008
+11:32 am,Job Completed ,Item Delivered: Item882 by Drone: DRONE006
+11:32 am,Job Completed ,Item Delivered: Item896 by Drone: DRONE011
+11:32 am,Job Completed ,Item Delivered: Item753 by Drone: DRONE010
+11:32 am,Job Completed ,Item Delivered: Item758 by Drone: DRONE029
+11:32 am ,Job Failed To Assign,Failed job - No Battery: DRONE010
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE008 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE011 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE029 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE006 to Item: unNamedItem
+11:32 am,Job Completed ,Item Delivered: Item782 by Drone: DRONE026
+11:32 am,Item Distributor Service,Added priority item: PriorityHighPriorityItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Job Completed ,Item Delivered: Item752 by Drone: DRONE019
+11:32 am,Reacharging Drone,Drone DRONE010 moved to battery station at (60.0 - 90.0)
+11:32 am,Job Completed ,Item Delivered: Item755 by Drone: DRONE009
+11:32 am,Job Completed ,Item Delivered: Item756 by Drone: DRONE001
+11:32 am,Job Failed ,Failed job: DRONE018-JOB
+11:32 am,Job Completed ,Item Delivered: PriorityPriorityItem1376 by Drone: DRONE017
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE018 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE001 to Item: PriorityHighPriorityItem
+11:32 am ,Job Failed To Assign,Failed job - No Battery: DRONE009
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE026 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE017 to Item: unNamedItem
+11:32 am ,Job Failed To Assign,Failed job - No Battery: DRONE019
+11:32 am,Job Completed ,Item Delivered: Item893 by Drone: DRONE012
+11:32 am,Job Completed ,Item Delivered: PriorityPriorityItem1358 by Drone: DRONE023
+11:32 am,Job Completed ,Item Delivered: Item786 by Drone: DRONE021
+11:32 am,Job Completed ,Item Delivered: Item876 by Drone: DRONE027
+11:32 am,Reacharging Drone,Drone DRONE019 moved to battery station at (60.0 - 90.0)
+11:32 am,Job Failed ,Failed job: DRONE024-JOB
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE024 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE027 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE023 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE010 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE012 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE021 to Item: unNamedItem
+11:32 am,Job Completed ,Item Delivered: Item757 by Drone: DRONE005
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-3
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-2
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-1
+11:32 am,Item Distributor Service,Added defined item: unNamedItem at station: PickUpStation-0
+11:32 am,Job Completed ,Item Delivered: Item997 by Drone: DRONE003
+11:32 am,Job Completed ,Item Delivered: PriorityPriorityItem1367 by Drone: DRONE015
+11:32 am,Reacharging Drone,Drone DRONE009 moved to battery station at (90.0 - 60.0)
+11:32 am,Job Completed ,Item Delivered: Item994 by Drone: DRONE014
+11:32 am,Job Completed ,Item Delivered: Item993 by Drone: DRONE030
+11:32 am,Job Completed ,Item Delivered: Item904 by Drone: DRONE013
+11:32 am,Job Completed ,Item Delivered: Item791 by Drone: DRONE020
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE015 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE014 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE020 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE013 to Item: unNamedItem
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE030 to Item: unNamedItem
+11:32 am ,Job Failed To Assign,Failed job - No Battery: DRONE003
+11:32 am ,Job Assigned,Created job - Assigned Drone: DRONE005 to Item: unNamedItem
+11:32 am,Job Completed ,Item Delivered: Item996 by Drone: DRONE022
+11:33 am,Job Completed ,Item Delivered: Item764 by Drone: DRONE028
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE028 to Item: unNamedItem
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE019 to Item: unNamedItem
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE009 to Item: unNamedItem
+11:33 am ,Job Failed To Assign,Failed job - No Battery: DRONE022
+11:33 am,Reacharging Drone,Drone DRONE003 moved to battery station at (120.0 - 130.0)
+11:33 am,Job Completed ,Item Delivered: Item890 by Drone: DRONE002
+11:33 am,Job Completed ,Item Delivered: Item905 by Drone: DRONE006
+11:33 am,Job Completed ,Item Delivered: Item889 by Drone: DRONE004
+11:33 am,Job Completed ,Item Delivered: Item754 by Drone: DRONE008
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE004 to Item: unNamedItem
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE002 to Item: unNamedItem
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE008 to Item: unNamedItem
+11:33 am ,Job Assigned,Created job - Assigned Drone: DRONE006 to Item: unNamedItem
+11:33 am,Job Completed ,Item Delivered: Item909 by Drone: DRONE020
+11:33 am,Reacharging Drone,Drone DRONE022 moved to battery station at (60.0 - 90.0)
+11:33 am,Job Completed ,Item Delivered: Item902 by Drone: DRONE017
+11:33 am,Job Completed ,Item Delivered: Item935 by Drone: DRONE014
+11:33 am,Job Completed ,Item Delivered: Item770 by Drone: DRONE011

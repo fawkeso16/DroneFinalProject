@@ -110,7 +110,7 @@ public final class DroneController {
             System.out.println("Starting simulation...");
             new Thread(() -> {
                 try {
-                    testEnvironment.DeterministicSchedulerTest();
+                    testEnvironment.TestAllEstimates();
                 } catch (Exception e) {
                     System.err.println("Simulation interrupted: " + e.getMessage());
                 }

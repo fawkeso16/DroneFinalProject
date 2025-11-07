@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -14,8 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import static java.util.concurrent.Executors.newFixedThreadPool;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -31,8 +28,6 @@ public class DroneService {
     private ApplicationEventPublisher eventPublisher;
     public final ReentrantLock lock = new ReentrantLock();
 
-    private final ScheduledExecutorService scheduler =
-        Executors.newScheduledThreadPool(40); 
     private final JobOverviewService jobs;
     private final Grid map;
     private final List<Location> targets;   
@@ -43,12 +38,14 @@ public class DroneService {
     private final Random random = new Random();
     private final LogManager logManager;
     private final Pathfinder pathfinder = new Pathfinder();
+    private final DroneMovementService movementService;
 
 
     @Autowired
     public DroneService(ConcurrentHashMap<String, Drone> TestDrones, JobOverviewService jobs, Grid map,
                         List<Location> TestTargets, List<BatteryStation> TestBatteryStations,
-                        List<PickupStation> TestPickUpStations, LogManager logManager) {
+                        List<PickupStation> TestPickUpStations, LogManager logManager,
+                        DroneMovementService movementService) {
         this.drones = TestDrones;
         this.jobs = jobs;
         this.map = map;
@@ -56,6 +53,7 @@ public class DroneService {
         this.batteryStations = TestBatteryStations;
         this.logManager = logManager;
         this.pickUpStations = TestPickUpStations;
+        this.movementService = movementService;
     }
 
     public List<Drone> getAllDrones() {
@@ -88,58 +86,56 @@ public class DroneService {
     //Take in drone and item, create a job for the drone to pick up the item from the pick-up station and deliver it to a random target.
     //if the drone is not available, it will not create a job for it. (send to battery station or ignore)
     public synchronized CompletableFuture<Boolean> createJob(Drone drone, Item item, Location destinationn) {
-    CompletableFuture<Boolean> jobFuture = new CompletableFuture<>();
-    
-    if (!drone.getAvailable().equals(DroneStatus.AVAILABLE.getCode())) {
-        jobFuture.complete(false);
-        System.out.println("FAILURE: Drone " + drone.getDroneid() + " is not available for item " + item.getItemId());
+        CompletableFuture<Boolean> jobFuture = new CompletableFuture<>();
+        
+        if (!drone.getAvailable().equals(DroneStatus.AVAILABLE.getCode())) {
+            jobFuture.complete(false);
+            System.out.println("FAILURE: Drone " + drone.getDroneid() + " is not available for item " + item.getItemId());
+            return jobFuture;
+        }
 
-        return jobFuture;
-    }
+        Item.CurrentItemsAvailable.removeItem(item);
+        Location destination = destinationn;
+        final PickupStation pickUpStation = item.getPickUpStation();
+        final Node pickUpLocation = pickUpStation.getLocation();
 
-    Item.CurrentItemsAvailable.removeItem(item);
-    Location destination = destinationn;
-    final PickupStation pickUpStation = item.getPickUpStation();
-    final Node pickUpLocation = pickUpStation.getLocation();
-
-   
-    if (destination != null) {
+        if (destination == null) {
+            System.err.println("No destination set for drone: " + drone.getDroneid());
+            jobFuture.complete(false);
+            return jobFuture;
+        }
+        
         Node start = new Node((int) drone.getX(), (int) drone.getY());
         Node end = map.getNode(destination.getNode().x, destination.getNode().y);
 
-        // CHECK IF OUR BATTERY WILL RUN OUT BEFORE REACHING DESTINATION IF SO SAY NO
+        // Battery validation
         if (drone.calculateBatteryUsage(start.distanceTo(pickUpLocation) + pickUpLocation.distanceTo(end)) > drone.getBattery()) {
-            
             drone.setAvailable(DroneStatus.RECHARGING.getCode());
             System.out.println("FAILURE: Drone " + drone.getDroneid() + " does not have enough battery for item " + item.getItemId());
 
-            String[] logMessage = {
+            logManager.addLog(new String[]{
                 getHourWithAmPm() + " ",
                 "Job Failed To Assign",
                 "Failed job - No Battery: " + drone.getDroneid()
-            };
-            logManager.addLog(logMessage);
+            });
+            
             sendToNearestBatteryStation(drone);
-          
             Item.CurrentItemsAvailable.addItem(item);
             jobs.removeJob(drone.getDroneid() + "-JOB");
-
             jobFuture.complete(false);
             return jobFuture;
         }
 
         String jobid = drone.getDroneid() + "-JOB";
         drone.setAvailable(DroneStatus.BUSY.getCode());
-        String[] logMessage = {
+        
+        logManager.addLog(new String[]{
             getHourWithAmPm() + " ",
             "Job Assigned",
             "Created job - Assigned Drone: " + drone.getDroneid() + " to Item: " + item.getItemName()
-        };
-
-        logManager.addLog(logMessage);   
+        });
 
         pathfindingExecutor.submit(() -> {
-
             try {
                 List<Node> pathToPickUp = pathfinder.findPath(map, map.getNode(start.x, start.y), map.getNode(pickUpLocation.x, pickUpLocation.y));
                 List<Node> pathFromPickUpToDestination = pathfinder.findPath(map, map.getNode(pickUpLocation.x, pickUpLocation.y), end);
@@ -159,58 +155,14 @@ public class DroneService {
                     eventPublisher.publishEvent(new PathsUpdatedEvent(getCurrentPaths()));
                 } catch (Exception e) {
                     System.err.println("WebSocket broadcast failed: " + e.getMessage());
-                    
                 }
             
                 double usage = drone.calculateBatteryUsage(start.distanceTo(pickUpLocation) + pickUpLocation.distanceTo(end));
     
+                // Execute movement using DroneMovementService
                 moveExecutor.submit(() -> {
-                    moveToTarget(drone, usage, pickUpStation, item)
-                        .thenAccept(result -> {
-                            if (result) {
-                                drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                
-                                String[] logMessage2 = {
-                                    getHourWithAmPm(),
-                                    "Job Completed ",
-                                    "Item Delivered: " + item.getItemId() + " by Drone: " + drone.getDroneid()
-                                };
-                
-                                logManager.addLog(logMessage2);
-                                jobs.removeJob(jobid);
-                                jobs.addToTotalBatteryUsage((int) usage);
-                                job.setTimeStarted(item.addedTo);
-                                job.setTimeCompleted(System.currentTimeMillis());
-                                job.setDuration();
-                
-                                jobs.addToJobStack(job);
-                
-                                if (item.priority) {
-                                    jobs.allPriorityJobTimes.add(job.getJobDuration());
-                                    System.out.println("Priority job for " + item.getItemId() + " took " + job.getJobDuration() + " milliseconds");
-                                } else {
-                                    jobs.allNormalJobTimes.add(job.getJobDuration());
-                                    System.out.println("Normal job for " + item.getItemId() + " took " + job.getJobDuration() + " milliseconds");
-                                }
-                
-                                jobFuture.complete(true);
-                
-                            } else {
-                                String[] logMessage3 = {
-                                    getHourWithAmPm(),
-                                    "Job Failed ",
-                                    "Failed job: " + jobid
-                                };
-                
-                                logManager.addLog(logMessage3);
-                
-                                drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                                jobs.removeJob(jobid);
-                                System.out.println("FAILURE: Drone " + drone.getDroneid() + " failed to deliver item " + item.getItemId());
-                
-                                jobFuture.complete(false);
-                            }
-                        })
+                    movementService.executeSingleItemDelivery(drone, pickUpStation, pathToPickUp, pathFromPickUpToDestination)
+                        .thenAccept(result -> handleSingleJobCompletion(result, drone, jobid, item, job, usage, jobFuture))
                         .exceptionally(ex -> {
                             System.err.println("Exception during moveToTarget for drone " + drone.getDroneid() + ": " + ex.getMessage());
                             drone.setAvailable(DroneStatus.AVAILABLE.getCode());
@@ -227,365 +179,223 @@ public class DroneService {
                 jobFuture.completeExceptionally(e);
             }
         });
-        
-    } else {
-        System.err.println("No destination set for drone: " + drone.getDroneid());
-        jobFuture.complete(false);
+
+        return jobFuture;
     }
 
-    return jobFuture;
-}
+    private void handleSingleJobCompletion(boolean result, Drone drone, String jobid, 
+                                          Item item, SingleItemJob job, double usage, 
+                                          CompletableFuture<Boolean> jobFuture) {
+        if (result) {
+            drone.setAvailable(DroneStatus.AVAILABLE.getCode());
+
+            logManager.addLog(new String[]{
+                getHourWithAmPm(),
+                "Job Completed ",
+                "Item Delivered: " + item.getItemId() + " by Drone: " + drone.getDroneid()
+            });
+
+            jobs.removeJob(jobid);
+            jobs.addToTotalBatteryUsage((int) usage);
+            job.setTimeStarted(item.addedTo);
+            job.setTimeCompleted(System.currentTimeMillis());
+            job.setDuration();
+            jobs.addToJobStack(job);
+
+            if (item.priority) {
+                jobs.allPriorityJobTimes.add(job.getJobDuration());
+                System.out.println("Priority job for " + item.getItemId() + " took " + job.getJobDuration() + " milliseconds");
+            } else {
+                jobs.allNormalJobTimes.add(job.getJobDuration());
+                System.out.println("Normal job for " + item.getItemId() + " took " + job.getJobDuration() + " milliseconds");
+            }
+
+            jobFuture.complete(true);
+        } else {
+            logManager.addLog(new String[]{
+                getHourWithAmPm(),
+                "Job Failed ",
+                "Failed job: " + jobid
+            });
+
+            drone.setAvailable(DroneStatus.AVAILABLE.getCode());
+            jobs.removeJob(jobid);
+            System.out.println("FAILURE: Drone " + drone.getDroneid() + " failed to deliver item " + item.getItemId());
+            jobFuture.complete(false);
+        }
+    }
 
 
-    public synchronized CompletableFuture<Boolean> createJobDouble(Drone drone, Item item, Location destination,  Item item2, Location destination2) {
+    public synchronized CompletableFuture<Boolean> createJobDouble(Drone drone, Item item, Location destination, Item item2, Location destination2) {
         CompletableFuture<Boolean> jobFuture = new CompletableFuture<>();
         
         if (!drone.getAvailable().equals(DroneStatus.AVAILABLE.getCode())) {
             jobFuture.complete(false);
             System.out.println("FAILURE: Drone " + drone.getDroneid() + " is not available for item " + item.getItemId());
-
             return jobFuture;
         }
 
-    Item.CurrentItemsAvailable.removeItem(item);
-    Item.CurrentItemsAvailable.removeItem(item2);
-
-        Location destinationOne = destination;
-        Location destinationTwo = destination2;
-
+        Item.CurrentItemsAvailable.removeItem(item);
+        Item.CurrentItemsAvailable.removeItem(item2);
 
         final PickupStation pickUpStation = item.getPickUpStation();
         final Node pickUpLocation = pickUpStation.getLocation();
 
-        if (pickUpLocation != null && destinationOne != null && destinationTwo != null) {
-
-            Node start = new Node((int) drone.getX(), (int) drone.getY());
-            Node firstTarget = map.getNode(destinationOne.getNode().x, destinationOne.getNode().y);
-            Node secondTarget = map.getNode(destinationTwo.getNode().x, destinationTwo.getNode().y);
-
-            double distFirst = pickUpLocation.distanceTo(firstTarget);
-            double distSecond = pickUpLocation.distanceTo(secondTarget);
-            if (distSecond < distFirst) {
-                Location tmpLoc = destinationOne; destinationOne = destinationTwo; destinationTwo = tmpLoc;
-                Node tmpNode = firstTarget; firstTarget = secondTarget; secondTarget = tmpNode;
-                Item tmpItem = item; item = item2; item2 = tmpItem;
-            }
-            final Location fDestinationOne = destinationOne;
-            final Location fDestinationTwo = destinationTwo;
-            final Item fItem1 = item;
-            final Item fItem2 = item2;
-            final Node fFirstTarget = firstTarget;
-            final Node fSecondTarget = secondTarget;
-
-            // distance from current location, to first target, then to second target.
-            if (drone.calculateBatteryUsage(start.distanceTo(pickUpLocation) + pickUpLocation.distanceTo(firstTarget) + firstTarget.distanceTo(secondTarget)) > drone.getBattery()) {
-
-                drone.setAvailable(DroneStatus.RECHARGING.getCode());
-                System.out.println("FAILURE: Drone " + drone.getDroneid() + " does not have enough battery for item " + item.getItemId());
-
-                String[] logMessage = {
-                    getHourWithAmPm() + " ",
-                    "Job Failed To Assign",
-                    "Failed job - No Battery: " + drone.getDroneid()
-                };
-                logManager.addLog(logMessage);
-                sendToNearestBatteryStation(drone);
-            
-                Item.CurrentItemsAvailable.addItem(item);
-                Item.CurrentItemsAvailable.addItem(item2);
-                jobs.removeJob(drone.getDroneid() + "-JOB");
-
-                jobFuture.complete(false);
-                return jobFuture;
-            }
-
-            String jobid = drone.getDroneid() + "-JOB";
-            drone.setAvailable(DroneStatus.BUSY.getCode());
-            String[] logMessage = {
-                getHourWithAmPm() + " ",
-                "Dual Job Assigned",
-                "Assigned Drone: " + drone.getDroneid() + " Items: [First: " + item.getItemName() + ", Second: " + item2.getItemName() + "]"
-            };
-
-            logManager.addLog(logMessage);   
-
-            pathfindingExecutor.submit(() -> {
-
-                try {
-                    List<Node> pathToPickUp = pathfinder.findPath(map, map.getNode(start.x, start.y), map.getNode(pickUpLocation.x, pickUpLocation.y));
-                    List<Node> pathFromPickUpToFirstTarget = pathfinder.findPath(map, map.getNode(pickUpLocation.x, pickUpLocation.y), fFirstTarget);
-                    List<Node> pathFromFirstTargetToSecondTarget = pathfinder.findPath(map, map.getNode(fFirstTarget.x, fFirstTarget.y), fSecondTarget);
-
-
-
-                    if (pathToPickUp == null || pathToPickUp.isEmpty()) {
-                        System.err.println("No path found for drone: " + drone.getDroneid());
-                        drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                        jobFuture.complete(false);
-                        return;
-                    }
-
-
-                    DoubleItemJob job = new DoubleItemJob(jobid, fItem1, drone, fDestinationOne, fItem2, fDestinationTwo, pathToPickUp, pathFromPickUpToFirstTarget, pathFromFirstTargetToSecondTarget);
-                    jobs.addDoubleJob(job);
-
-
-                    try {
-                        eventPublisher.publishEvent(new PathsUpdatedEvent(getCurrentPaths()));
-                    } catch (Exception e) {
-                        System.err.println("WebSocket broadcast failed: " + e.getMessage());
-                        
-                    }
-                
-                    double usage = drone.calculateBatteryUsage(start.distanceTo(pickUpLocation) + pickUpLocation.distanceTo(fFirstTarget) + fFirstTarget.distanceTo(fSecondTarget));
-        
-                    moveExecutor.submit(() -> {
-                        moveToTargetDoubleJob(drone, usage, pickUpStation, fItem1, fItem2)
-                            .thenAccept(result -> {
-                                if (result) {
-                                    drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                    
-                                    String[] logMessage2 = {
-                                        getHourWithAmPm(),
-                                        "Dual Job Completed ",
-                                        "Items Delivered: " + fItem1.getItemId() + ", " + fItem2.getItemId() + " by Drone: " + drone.getDroneid()
-                                    };
-                    
-                                    logManager.addLog(logMessage2);
-                                    jobs.removeJob(jobid);
-                                    jobs.addToTotalBatteryUsage((int) usage);
-                                    job.setTimeStarted(fItem1.addedTo);
-                                    job.setTimeCompleted(System.currentTimeMillis());
-                                    job.setDuration();
-                    
-                                    jobs.addToJobStack(job);
-                    
-                                    if (fItem1.priority) {
-                                        jobs.allPriorityJobTimes.add(job.getJobDuration());
-                                        System.out.println("Priority job for " + fItem1.getItemId() + " took " + job.getJobDuration() + " milliseconds");
-                                    } else {
-                                        jobs.allNormalJobTimes.add(job.getJobDuration());
-                                        System.out.println("Normal job for " + fItem1.getItemId() + " took " + job.getJobDuration() + " milliseconds");
-                                    }
-                    
-                                    jobFuture.complete(true);
-                    
-                                   } else {
-                                    String[] logMessage3 = {
-                                        getHourWithAmPm(),
-                                        "Dual Job Failed ",
-                                        "Failed dual job: " + jobid
-                                    };
-                    
-                                    logManager.addLog(logMessage3);
-                    
-                                    drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                                    jobs.removeJob(jobid);
-                                    System.out.println("FAILURE: Drone " + drone.getDroneid() + " failed to deliver both items " + fItem1.getItemId() + ", " + fItem2.getItemId());
-                    
-                                    jobFuture.complete(false);
-                                }
-                            })
-                            .exceptionally(ex -> {
-                                System.err.println("Exception during moveToTarget for drone " + drone.getDroneid() + ": " + ex.getMessage());
-                                drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                                jobs.removeJob(jobid);
-                                jobFuture.complete(false);
-                                return null;
-                            });
-                    });
-
-                } catch (Exception e) {
-                            System.err.println("Dual pathfinding error for drone " + drone.getDroneid() + ": " + e.getMessage());
-                    drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                    jobs.removeJob(jobid);
-                    jobFuture.completeExceptionally(e);
-                }
-            });
-            
-        } else {
+        if (pickUpLocation == null || destination == null || destination2 == null) {
             System.err.println("No destination(s) set for drone: " + drone.getDroneid());
             jobFuture.complete(false);
+            return jobFuture;
         }
+
+        Node start = new Node((int) drone.getX(), (int) drone.getY());
+        Node firstTarget = map.getNode(destination.getNode().x, destination.getNode().y);
+        Node secondTarget = map.getNode(destination2.getNode().x, destination2.getNode().y);
+
+        double distFirst = pickUpLocation.distanceTo(firstTarget);
+        double distSecond = pickUpLocation.distanceTo(secondTarget);
+        
+        if (distSecond < distFirst) {
+            Location tmpLoc = destination;
+            destination = destination2;
+            destination2 = tmpLoc;
+            Node tmpNode = firstTarget;
+            firstTarget = secondTarget;
+            secondTarget = tmpNode;
+            Item tmpItem = item;
+            item = item2;
+            item2 = tmpItem;
+        }
+        
+        final Location fDestinationOne = destination;
+        final Location fDestinationTwo = destination2;
+        final Item fItem1 = item;
+        final Item fItem2 = item2;
+        final Node fFirstTarget = firstTarget;
+        final Node fSecondTarget = secondTarget;
+
+        double totalDistance = start.distanceTo(pickUpLocation) + 
+                              pickUpLocation.distanceTo(firstTarget) + 
+                              firstTarget.distanceTo(secondTarget);
+        
+        if (drone.calculateBatteryUsage(totalDistance) > drone.getBattery()) {
+            drone.setAvailable(DroneStatus.RECHARGING.getCode());
+            System.out.println("FAILURE: Drone " + drone.getDroneid() + " does not have enough battery for dual delivery");
+
+            logManager.addLog(new String[]{
+                getHourWithAmPm() + " ",
+                "Job Failed To Assign",
+                "Failed job - No Battery: " + drone.getDroneid()
+            });
+            
+            sendToNearestBatteryStation(drone);
+            Item.CurrentItemsAvailable.addItem(fItem1);
+            Item.CurrentItemsAvailable.addItem(fItem2);
+            jobs.removeJob(drone.getDroneid() + "-JOB");
+            jobFuture.complete(false);
+            return jobFuture;
+        }
+
+        // Job 
+        String jobid = drone.getDroneid() + "-JOB";
+        drone.setAvailable(DroneStatus.BUSY.getCode());
+        
+        logManager.addLog(new String[]{
+            getHourWithAmPm() + " ",
+            "Dual Job Assigned",
+            "Assigned Drone: " + drone.getDroneid() + " Items: [First: " + fItem1.getItemName() + ", Second: " + fItem2.getItemName() + "]"
+        });
+
+        pathfindingExecutor.submit(() -> {
+            try {
+                List<Node> pathToPickUp = pathfinder.findPath(map, map.getNode(start.x, start.y), map.getNode(pickUpLocation.x, pickUpLocation.y));
+                List<Node> pathToFirstTarget = pathfinder.findPath(map, map.getNode(pickUpLocation.x, pickUpLocation.y), fFirstTarget);
+                List<Node> pathToSecondTarget = pathfinder.findPath(map, map.getNode(fFirstTarget.x, fFirstTarget.y), fSecondTarget);
+
+                if (pathToPickUp == null || pathToPickUp.isEmpty()) {
+                    System.err.println("No path found for drone: " + drone.getDroneid());
+                    drone.setAvailable(DroneStatus.AVAILABLE.getCode());
+                    jobFuture.complete(false);
+                    return;
+                }
+
+                DoubleItemJob job = new DoubleItemJob(jobid, fItem1, drone, fDestinationOne, fItem2, fDestinationTwo, 
+                                                      pathToPickUp, pathToFirstTarget, pathToSecondTarget);
+                jobs.addDoubleJob(job);
+
+                try {
+                    eventPublisher.publishEvent(new PathsUpdatedEvent(getCurrentPaths()));
+                } catch (Exception e) {
+                    System.err.println("WebSocket broadcast failed: " + e.getMessage());
+                }
+
+                double usage = drone.calculateBatteryUsage(totalDistance);
+
+                moveExecutor.submit(() -> {
+                    movementService.executeDoubleItemDelivery(drone, pickUpStation, pathToPickUp, 
+                                                             pathToFirstTarget, pathToSecondTarget, fItem1, fItem2)
+                        .thenAccept(result -> handleDoubleJobCompletion(result, drone, jobid, fItem1, fItem2, job, usage, jobFuture))
+                        .exceptionally(ex -> {
+                            System.err.println("Exception during dual delivery for drone " + drone.getDroneid() + ": " + ex.getMessage());
+                            drone.setAvailable(DroneStatus.AVAILABLE.getCode());
+                            jobs.removeJob(jobid);
+                            jobFuture.complete(false);
+                            return null;
+                        });
+                });
+
+            } catch (Exception e) {
+                System.err.println("Dual pathfinding error for drone " + drone.getDroneid() + ": " + e.getMessage());
+                drone.setAvailable(DroneStatus.AVAILABLE.getCode());
+                jobs.removeJob(jobid);
+                jobFuture.completeExceptionally(e);
+            }
+        });
 
         return jobFuture;
     }
 
-
-    public CompletableFuture<Boolean> moveToTarget(Drone drone, double usage, PickupStation pickUpStation, Item item) {
-        String jid = drone.getDroneid() + "-JOB";
-        SingleItemJob thisJob = jobs.getJobById(jid);
-        if (thisJob == null) {
-            System.err.println("Job not found for drone: " + drone.getDroneid());
-            return CompletableFuture.completedFuture(false);
-        }
-
-        List<Node> pathToPickUp = thisJob.getPathToPickUp();
-        List<Node> pathToDestination = thisJob.getPathToDestination();
-
-        if (pickUpStation == null) {
-            System.err.println("No pick-up station available for drone: " + drone.getDroneid());
+    private void handleDoubleJobCompletion(boolean result, Drone drone, String jobid, 
+                                          Item item1, Item item2, DoubleItemJob job, 
+                                          double usage, CompletableFuture<Boolean> jobFuture) {
+        if (result) {
             drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-            return CompletableFuture.completedFuture(false);
-        }
 
-        return moveToPickUpStation(drone, pickUpStation, pathToPickUp)
-            .thenCompose(pickUpSuccess -> {
-                if (!pickUpSuccess) {
-                    System.err.println("Drone " + drone.getDroneid() + " failed to reach pick-up station.");
-                    return CompletableFuture.completedFuture(false);
-                }
-                return moveToDestination(drone, pathToDestination);
-            })
-            .thenApply(destSuccess -> {
-                if (!destSuccess) {
-                    System.err.println("Drone " + drone.getDroneid() + " failed to reach destination.");
-                }
-                return destSuccess;
+            logManager.addLog(new String[]{
+                getHourWithAmPm(),
+                "Dual Job Completed ",
+                "Items Delivered: " + item1.getItemId() + ", " + item2.getItemId() + " by Drone: " + drone.getDroneid()
             });
 
+            jobs.removeJob(jobid);
+            jobs.addToTotalBatteryUsage((int) usage);
+            job.setTimeStarted(item1.addedTo);
+            job.setTimeCompleted(System.currentTimeMillis());
+            job.setDuration();
+            jobs.addToJobStack(job);
 
-    }
+            if (item1.priority) {
+                jobs.allPriorityJobTimes.add(job.getJobDuration());
+                System.out.println("Priority job for " + item1.getItemId() + " took " + job.getJobDuration() + " milliseconds");
+            } else {
+                jobs.allNormalJobTimes.add(job.getJobDuration());
+                System.out.println("Normal job for " + item1.getItemId() + " took " + job.getJobDuration() + " milliseconds");
+            }
 
-
-    public CompletableFuture<Boolean> moveToTargetDoubleJob(Drone drone, double usage, PickupStation pickUpStation, Item item, Item secondItem) {
-        String jid = drone.getDroneid() + "-JOB";
-        DoubleItemJob thisJob = jobs.getDoubleJobById(jid);
-        if (thisJob == null) {
-            System.err.println("Job not found for drone: " + drone.getDroneid());
-            return CompletableFuture.completedFuture(false);
-        }
-
-        List<Node> pathToPickUp = thisJob.getPathToPickUp();
-        List<Node> pathToDestination = thisJob.getPathToDestination();
-        List<Node> pathFromFirstTargetToSecondTarget = thisJob.getPathFromFirstTargetToSecondTarget();
-
-        System.out.println("[DUAL] Paths => pickup:" + (pathToPickUp==null?0:pathToPickUp.size()) + 
-            " firstLeg:" + (pathToDestination==null?0:pathToDestination.size()) + 
-            " secondLeg:" + (pathFromFirstTargetToSecondTarget==null?0:pathFromFirstTargetToSecondTarget.size()));
-
-        if (pickUpStation == null) {
-            System.err.println("No pick-up station available for drone: " + drone.getDroneid());
-            drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-            return CompletableFuture.completedFuture(false);
-        }
-
-        return moveToPickUpStation(drone, pickUpStation, pathToPickUp)
-            .thenCompose(pickUpSuccess -> {
-                if (!pickUpSuccess) {
-                    System.err.println("[DUAL] Drone " + drone.getDroneid() + " failed to reach pick-up station.");
-                    return CompletableFuture.completedFuture(false);
-                }
-                System.out.println("[DUAL] Drone " + drone.getDroneid() + " collected both items at station.");
-                return moveToDestination(drone, pathToDestination);
-            })
-            .thenCompose(firstLegSuccess -> {
-                if (!firstLegSuccess) {
-                    System.err.println("[DUAL] Drone " + drone.getDroneid() + " failed en route to first drop.");
-                    return CompletableFuture.completedFuture(false);
-                }
-                System.out.println("[DUAL] Drone " + drone.getDroneid() + " delivered FIRST item " + item.getItemId());
-                if (pathFromFirstTargetToSecondTarget == null || pathFromFirstTargetToSecondTarget.isEmpty()) {
-                    System.out.println("[DUAL] No second leg path (same destination) treated as success.");
-                    return CompletableFuture.completedFuture(true);
-                }
-                Node secStart = pathFromFirstTargetToSecondTarget.get(0);
-                Node secEnd = pathFromFirstTargetToSecondTarget.get(pathFromFirstTargetToSecondTarget.size()-1);
-                System.out.println("[DUAL] Second leg start=" + secStart.x + "," + secStart.y + " end=" + secEnd.x + "," + secEnd.y + " length=" + pathFromFirstTargetToSecondTarget.size());
-                CompletableFuture<Void> pause = new CompletableFuture<>();
-                scheduler.schedule(() -> {
-                    System.out.println("[DUAL] Pause after first drop complete. Beginning second leg...");
-                    pause.complete(null);
-                }, 1, TimeUnit.SECONDS);
-                return pause.thenCompose(v -> moveToDestination(drone, pathFromFirstTargetToSecondTarget))
-                        .thenApply(secondLegSuccess -> {
-                            if (!secondLegSuccess) {
-                                System.err.println("[DUAL] Drone " + drone.getDroneid() + " failed en route to second drop.");
-                                return false;
-                            }
-                            System.out.println("[DUAL] Drone " + drone.getDroneid() + " delivered SECOND item " + secondItem.getItemId());
-                            return true;
-                        });
+            jobFuture.complete(true);
+        } else {
+            logManager.addLog(new String[]{
+                getHourWithAmPm(),
+                "Dual Job Failed ",
+                "Failed dual job: " + jobid
             });
-    }
 
-
-
-
-
-    public CompletableFuture<Boolean> moveToPickUpStation(Drone drone, PickupStation pickUpStation, List<Node> pathToPickUp) {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-    
-        if (pathToPickUp == null || pathToPickUp.isEmpty()) {
-            System.err.println("No path found for drone: " + drone.getDroneid());
             drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-            future.complete(false);
-            return future;
+            jobs.removeJob(jobid);
+            System.out.println("FAILURE: Drone " + drone.getDroneid() + " failed to deliver both items " + item1.getItemId() + ", " + item2.getItemId());
+            jobFuture.complete(false);
         }
-    
-        final double batteryPerNode = 0.1;
-        final Iterator<Node> iterator = pathToPickUp.iterator();
-    
-        ScheduledFuture<?> scheduled = scheduler.scheduleAtFixedRate(() -> {
-            if (!iterator.hasNext()) {
-                pickUpStation.requestPickup(drone);
-                future.complete(true);
-                throw new RuntimeException("STOP"); 
-            }
-    
-            Node next = iterator.next();
-            drone.moveTo(next.x, next.y);
-            drone.setBattery(drone.getBattery() - batteryPerNode);
-    
-            if (drone.getBattery() <= 0) {
-                drone.setAvailable(DroneStatus.AVAILABLE.getCode());
-                future.complete(false);
-                throw new RuntimeException("STOP");
-            }
-    
-        }, 0, 75, TimeUnit.MILLISECONDS);
-    
-        future.whenComplete((result, error) -> scheduled.cancel(false));
-    
-        return future;
     }
-    
 
-
-
-    public CompletableFuture<Boolean> moveToDestination(Drone drone, List<Node> pathToDestination) {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-        if (pathToDestination == null || pathToDestination.isEmpty()) {
-            future.complete(false);
-            return future;
-        }
-    
-        final double batteryPerNode = 0.1;
-        final Iterator<Node> iterator = pathToDestination.iterator();
-    
-        ScheduledFuture<?> scheduled = scheduler.scheduleAtFixedRate(() -> {
-            if (!iterator.hasNext()) {
-                future.complete(true);
-                throw new RuntimeException("STOP");
-            }
-    
-            Node next = iterator.next();
-            drone.moveTo(next.x, next.y);
-            drone.setBattery(drone.getBattery() - batteryPerNode);
-    
-            if (drone.getBattery() <= 0) {
-                future.complete(false);
-                throw new RuntimeException("STOP");
-            }
-    
-        }, 0, 75, TimeUnit.MILLISECONDS);
-    
-        future.whenComplete((res, ex) -> scheduled.cancel(false));
-    
-        return future;
-    }
-    
-    
 
 
 
