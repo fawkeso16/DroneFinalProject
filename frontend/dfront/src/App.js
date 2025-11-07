@@ -560,7 +560,7 @@ return (
               <PickUpStations />
             </div>
 
-            {/* No-Fly Zone - single canvas for performance */}
+           
             {showNoFlyZone && (
               <canvas
                 ref={noFlyZoneCanvasRef}
